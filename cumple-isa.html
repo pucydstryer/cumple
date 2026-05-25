@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Feliz Cumple Isa</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            overflow: hidden;
+            touch-action: none;
+            /* Importamos una fuente bonita para el texto central */
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="boomSound" src="tu_audio.mp3"></audio>
+    <canvas id="matrix"></canvas>
+
+    <script>
+        const canvas = document.getElementById("matrix");
+        const ctx = canvas.getContext("2d");
+
+        let fontSize;
+        let columns;
+        let drops = [];
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            // Tamaño del texto de fondo
+            fontSize = window.innerWidth < 768 ? 20 : 24;
+            columns = Math.floor(canvas.width / fontSize);
+
+            drops = [];
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.random() * canvas.height;
+            }
+        }
+
+        initCanvas();
+
+        // Texto del fondo (Matrix)
+        const bgText = "felicidades ";
+        const centerText = "feliz cumple isa XD 💗";
+        const particles = [];
+
+        function drawMatrix() {
+            // Fondo semitransparente para la estela
+            ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Color del texto que cae (rosado/rojizo oscuro como en la imagen)
+            ctx.fillStyle = "#ff1a75";
+            ctx.font = `bold ${fontSize}px Arial`;
+
+            for (let i = 0; i < drops.length; i++) {
+                const x = i * fontSize;
+                const y = drops[i];
+
+                ctx.fillText(bgText, x, y);
+
+                drops[i] += 4; // Velocidad de caída
+
+                if (drops[i] > canvas.height && Math.random() > 0.95) {
+                    drops[i] = 0;
+                }
+            }
+        }
+
+        function drawCenterText() {
+            ctx.save();
+
+            // Ajustamos el tamaño del texto central para celulares y PC
+            const fontSizeCenter = window.innerWidth < 768 ? 30 : 65;
+            ctx.font = `bold ${fontSizeCenter}px 'Comic Sans MS', cursive`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+
+            // Efecto de brillo / borde rosado
+            ctx.shadowColor = "#ff4da6";
+            ctx.shadowBlur = 15;
+            ctx.lineWidth = window.innerWidth < 768 ? 4 : 6;
+            ctx.strokeStyle = "#ff4da6";
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            // Dibujamos el borde brillante primero
+            ctx.strokeText(centerText, centerX, centerY);
+
+            // Dibujamos el texto blanco por encima
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = "white";
+            ctx.fillText(centerText, centerX, centerY);
+
+            ctx.restore();
+        }
+
+        function createExplosion(x, y) {
+            const sound = document.getElementById("boomSound");
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play().catch(e => console.log("Audio bloqueado", e));
+            }
+
+            const particleCount = window.innerWidth < 768 ? 40 : 80;
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    size: Math.random() * 4 + 1,
+                    speedX: (Math.random() - 0.5) * 12,
+                    speedY: (Math.random() - 0.5) * 12,
+                    // Colores en la gama de los rosados/magentas para imitar la imagen
+                    color: `hsl(${Math.random() * 40 + 310}, 100%, 65%)`,
+                    life: 80 + Math.random() * 40
+                });
+            }
+        }
+
+        function drawParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+
+                ctx.beginPath();
+                // Dibujamos las partículas como pequeñas líneas o círculos estirados por la velocidad
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+
+                // Agregamos un poco de brillo a las partículas
+                ctx.shadowColor = p.color;
+                ctx.shadowBlur = 10;
+                ctx.fill();
+                ctx.shadowBlur = 0; // reset
+
+                p.x += p.speedX;
+                p.y += p.speedY;
+
+                p.life -= 2;
+
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+
+        function animate() {
+            drawMatrix();
+            drawParticles();
+            drawCenterText(); // Lo llamamos al final para que siempre esté por encima de todo
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        window.addEventListener("click", (e) => {
+            createExplosion(e.clientX, e.clientY);
+        });
+
+        window.addEventListener("touchstart", (e) => {
+            const touch = e.touches[0];
+            createExplosion(touch.clientX, touch.clientY);
+        }, { passive: true });
+
+        window.addEventListener("resize", () => {
+            initCanvas();
+        });
+    </script>
+</body>
+</html>
