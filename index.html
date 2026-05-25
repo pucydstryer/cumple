@@ -48,7 +48,7 @@
         initCanvas();
 
         const bgText = "felicidades ";
-        const centerText = "feliz cumple isa q cumplas menos XD💗"; // <--- Aquí está el texto central de nuevo
+        const centerText = "feliz cumple isa q cumplas menos XD💗";
         const particles = [];
 
         function drawMatrix() {
@@ -72,17 +72,14 @@
             }
         }
 
-        // Función para dibujar el letrero del centro
         function drawCenterText() {
             ctx.save();
             
-            // Más grande en PC (65px) y adaptado a celular (30px)
             const fontSizeCenter = window.innerWidth < 768 ? 30 : 65;
             ctx.font = `bold ${fontSizeCenter}px 'Comic Sans MS', cursive`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
 
-            // Borde brillante rosa
             ctx.shadowColor = "#ff4da6";
             ctx.shadowBlur = 15;
             ctx.lineWidth = window.innerWidth < 768 ? 4 : 6;
@@ -93,7 +90,6 @@
 
             ctx.strokeText(centerText, centerX, centerY);
 
-            // Relleno blanco
             ctx.shadowBlur = 0;
             ctx.fillStyle = "white";
             ctx.fillText(centerText, centerX, centerY);
@@ -151,7 +147,7 @@
         function animate() {
             drawMatrix();
             drawParticles();
-            drawCenterText(); // <--- Dibuja el texto encima de las letras que caen
+            drawCenterText();
             
             requestAnimationFrame(animate);
         }
