@@ -11,7 +11,6 @@
             background-color: black;
             overflow: hidden;
             touch-action: none;
-            /* Importamos una fuente bonita para el texto central */
             font-family: 'Comic Sans MS', cursive, sans-serif;
         }
         canvas {
@@ -36,7 +35,6 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
-            // Tamaño del texto de fondo
             fontSize = window.innerWidth < 768 ? 20 : 24;
             columns = Math.floor(canvas.width / fontSize);
 
@@ -48,17 +46,14 @@
 
         initCanvas();
 
-        // Texto del fondo (Matrix)
         const bgText = "felicidades ";
         const centerText = "feliz cumple isa XD 💗";
         const particles = [];
 
         function drawMatrix() {
-            // Fondo semitransparente para la estela
             ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Color del texto que cae (rosado/rojizo oscuro como en la imagen)
             ctx.fillStyle = "#ff1a75";
             ctx.font = `bold ${fontSize}px Arial`;
 
@@ -79,13 +74,11 @@
         function drawCenterText() {
             ctx.save();
 
-            // Ajustamos el tamaño del texto central para celulares y PC
             const fontSizeCenter = window.innerWidth < 768 ? 30 : 65;
             ctx.font = `bold ${fontSizeCenter}px 'Comic Sans MS', cursive`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
 
-            // Efecto de brillo / borde rosado
             ctx.shadowColor = "#ff4da6";
             ctx.shadowBlur = 15;
             ctx.lineWidth = window.innerWidth < 768 ? 4 : 6;
@@ -94,10 +87,8 @@
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
 
-            // Dibujamos el borde brillante primero
             ctx.strokeText(centerText, centerX, centerY);
 
-            // Dibujamos el texto blanco por encima
             ctx.shadowBlur = 0;
             ctx.fillStyle = "white";
             ctx.fillText(centerText, centerX, centerY);
@@ -121,7 +112,6 @@
                     size: Math.random() * 4 + 1,
                     speedX: (Math.random() - 0.5) * 12,
                     speedY: (Math.random() - 0.5) * 12,
-                    // Colores en la gama de los rosados/magentas para imitar la imagen
                     color: `hsl(${Math.random() * 40 + 310}, 100%, 65%)`,
                     life: 80 + Math.random() * 40
                 });
@@ -133,11 +123,9 @@
                 const p = particles[i];
 
                 ctx.beginPath();
-                // Dibujamos las partículas como pequeñas líneas o círculos estirados por la velocidad
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fillStyle = p.color;
 
-                // Agregamos un poco de brillo a las partículas
                 ctx.shadowColor = p.color;
                 ctx.shadowBlur = 10;
                 ctx.fill();
@@ -158,7 +146,7 @@
         function animate() {
             drawMatrix();
             drawParticles();
-            drawCenterText(); // Lo llamamos al final para que siempre esté por encima de todo
+            drawCenterText(); 
 
             requestAnimationFrame(animate);
         }
