@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Feliz Cumple Isa</title>
+    <title>Matrix Fondo</title>
     <style>
         body {
             margin: 0;
@@ -11,7 +11,6 @@
             background-color: black;
             overflow: hidden;
             touch-action: none;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
         }
         canvas {
             display: block;
@@ -35,7 +34,7 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
-            fontSize = window.innerWidth < 768 ? 20 : 24;
+            fontSize = window.innerWidth < 768 ? 20 : 24; 
             columns = Math.floor(canvas.width / fontSize);
 
             drops = [];
@@ -47,7 +46,6 @@
         initCanvas();
 
         const bgText = "felicidades ";
-        const centerText = "feliz cumple isa XD 💗";
         const particles = [];
 
         function drawMatrix() {
@@ -63,7 +61,7 @@
 
                 ctx.fillText(bgText, x, y);
 
-                drops[i] += 4; // Velocidad de caída
+                drops[i] += 4; 
 
                 if (drops[i] > canvas.height && Math.random() > 0.95) {
                     drops[i] = 0;
@@ -71,36 +69,11 @@
             }
         }
 
-        function drawCenterText() {
-            ctx.save();
-
-            const fontSizeCenter = window.innerWidth < 768 ? 30 : 65;
-            ctx.font = `bold ${fontSizeCenter}px 'Comic Sans MS', cursive`;
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-
-            ctx.shadowColor = "#ff4da6";
-            ctx.shadowBlur = 15;
-            ctx.lineWidth = window.innerWidth < 768 ? 4 : 6;
-            ctx.strokeStyle = "#ff4da6";
-
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-
-            ctx.strokeText(centerText, centerX, centerY);
-
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = "white";
-            ctx.fillText(centerText, centerX, centerY);
-
-            ctx.restore();
-        }
-
         function createExplosion(x, y) {
             const sound = document.getElementById("boomSound");
             if (sound) {
                 sound.currentTime = 0;
-                sound.play().catch(e => console.log("Audio bloqueado", e));
+                sound.play();
             }
 
             const particleCount = window.innerWidth < 768 ? 40 : 80;
@@ -125,16 +98,16 @@
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fillStyle = p.color;
-
+                
                 ctx.shadowColor = p.color;
                 ctx.shadowBlur = 10;
                 ctx.fill();
-                ctx.shadowBlur = 0; // reset
+                ctx.shadowBlur = 0; 
 
                 p.x += p.speedX;
                 p.y += p.speedY;
-
-                p.life -= 2;
+                
+                p.life -= 2; 
 
                 if (p.life <= 0) {
                     particles.splice(i, 1);
@@ -146,8 +119,6 @@
         function animate() {
             drawMatrix();
             drawParticles();
-            drawCenterText(); 
-
             requestAnimationFrame(animate);
         }
 
