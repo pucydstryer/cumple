@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Matrix Fondo</title>
+    <title>Feliz Cumple Isa</title>
     <style>
         body {
             margin: 0;
@@ -11,6 +11,7 @@
             background-color: black;
             overflow: hidden;
             touch-action: none;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
         }
         canvas {
             display: block;
@@ -34,6 +35,7 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
+            // Tamaño de las letras del fondo
             fontSize = window.innerWidth < 768 ? 20 : 24; 
             columns = Math.floor(canvas.width / fontSize);
 
@@ -46,6 +48,7 @@
         initCanvas();
 
         const bgText = "felicidades ";
+        const centerText = "feliz cumple isa XD 💗"; // <--- Aquí está el texto central de nuevo
         const particles = [];
 
         function drawMatrix() {
@@ -69,11 +72,40 @@
             }
         }
 
+        // Función para dibujar el letrero del centro
+        function drawCenterText() {
+            ctx.save();
+            
+            // Más grande en PC (65px) y adaptado a celular (30px)
+            const fontSizeCenter = window.innerWidth < 768 ? 30 : 65;
+            ctx.font = `bold ${fontSizeCenter}px 'Comic Sans MS', cursive`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+
+            // Borde brillante rosa
+            ctx.shadowColor = "#ff4da6";
+            ctx.shadowBlur = 15;
+            ctx.lineWidth = window.innerWidth < 768 ? 4 : 6;
+            ctx.strokeStyle = "#ff4da6";
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            ctx.strokeText(centerText, centerX, centerY);
+
+            // Relleno blanco
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = "white";
+            ctx.fillText(centerText, centerX, centerY);
+            
+            ctx.restore();
+        }
+
         function createExplosion(x, y) {
             const sound = document.getElementById("boomSound");
             if (sound) {
                 sound.currentTime = 0;
-                sound.play();
+                sound.play().catch(e => console.log("Audio bloqueado", e));
             }
 
             const particleCount = window.innerWidth < 768 ? 40 : 80;
@@ -119,6 +151,8 @@
         function animate() {
             drawMatrix();
             drawParticles();
+            drawCenterText(); // <--- Dibuja el texto encima de las letras que caen
+            
             requestAnimationFrame(animate);
         }
 
